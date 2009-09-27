@@ -1,0 +1,47 @@
+                             Muldis::D::Manual
+---------------------------------------------------------------------------
+
+2009-09-26   Darren Duncan <perl@DarrenDuncan.net>
+
+    * Muldis::D::Manual version 0.0.0 is released on CPAN as
+    Muldis-D-Manual-0.0.0.tar.gz.
+
+    * This is the first release of the Muldis-D-Manual distribution, and
+    the first release of any distribution to contain Perl 5 modules named
+    Muldis::D::Manual::\w+.
+
+    * This is the initial file manifest:
+
+        archives/Muldis_D_PDAFP_200807_lt.xul
+        archives/Muldis_D_PDAFP_200807_sa.xul
+        archives/Muldis_D_PDAFP_200807_updated.xul
+        archives/OSCON2005LightningTalk.txt
+        archives/OSCON2008SessionProposal.txt
+        archives/README
+        archives/takahashi.css
+        archives/takahashi.js
+        Changes
+        INSTALL
+        lib/Muldis/D/Manual.pm
+        LICENSE/GPL
+        Makefile.PL
+        MANIFEST
+        MANIFEST.SKIP
+        README
+        t/Muldis_D_Manual_00_Compile.t
+        TODO
+        util/BBEdit_LM_Muldis_D.plist
+        util/Input_Method_Muldis_D.cin
+        util/README
+
+    * The file lib/Muldis/D/Manual.pm is the main one that was newly
+    created for the Muldis-D-Manual distro, and introduces the distro.
+
+    * All of the 11 files in the archives/ and util/ folders, except the 1
+    OSCON2005LightningTalk.txt, have been transferred here from the
+    Muldis-D distribution with no significant changes, where they had been
+    supplementary files and not part of the language spec proper; so from
+    now on, the Muldis-D documentation would just contain the Muldis D spec
+    proper and any supplementary material would live in Muldis-D-Manual.
+    The 1 was transferred here from the Muldis-Rosetta distribution, where
+    it constituted the entire archives/ folder.
