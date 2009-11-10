@@ -1,9 +1,9 @@
 --- #YAML:1.0
 name:               Muldis-D-Manual
-version:            0.1.0
+version:            0.1.1
 abstract:           Muldis D language and implementations manual
 author:
-    - Darren Duncan <perl@DarrenDuncan.net>
+    - Darren Duncan <darren@DarrenDuncan.net>
 license:            gpl
 distribution_type:  module
 configure_requires:
