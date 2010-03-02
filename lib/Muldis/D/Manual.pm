@@ -2,7 +2,7 @@ use 5.006;
 use strict;
 use warnings;
 package Muldis::D::Manual;
-our $VERSION = '0.001001';
+our $VERSION = '0.002000';
 $VERSION = eval $VERSION;
 # Note that Perl code only exists at all in this file in order to help
 # the CPAN indexer handle the distribution properly.
@@ -20,7 +20,7 @@ Muldis D language and implementations manual
 
 =head1 VERSION
 
-This document is Muldis::D::Manual version 0.1.1.
+This document is Muldis::D::Manual version 0.2.0.
 
 =head1 DESCRIPTION
 
@@ -70,7 +70,7 @@ Darren Duncan (C<darren@DarrenDuncan.net>)
 
 This file is part of the Muldis D language and implementations manual.
 
-Muldis D Manual is Copyright © 2008-2009, Muldis Data Systems, Inc.
+Muldis D Manual is Copyright © 2008-2010, Muldis Data Systems, Inc.
 
 L<http://www.muldis.com/>
 
