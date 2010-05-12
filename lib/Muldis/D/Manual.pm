@@ -2,7 +2,7 @@ use 5.006;
 use strict;
 use warnings;
 package Muldis::D::Manual;
-our $VERSION = '0.003000';
+our $VERSION = '0.004000';
 $VERSION = eval $VERSION;
 # Note that Perl code only exists at all in this file in order to help
 # the CPAN indexer handle the distribution properly.
@@ -20,7 +20,14 @@ Muldis D language and implementations manual
 
 =head1 VERSION
 
-This document is Muldis::D::Manual version 0.3.0.
+This document is Muldis::D::Manual version 0.4.0.
+
+=head1 PREFACE
+
+This is the root document of the Muldis D language and implementations
+manual; the documents that comprise the remaining parts of the manual, in
+their suggested reading order (but that all follow the root), are listed in
+the other sections below in this document.
 
 =head1 DESCRIPTION
 
@@ -43,12 +50,20 @@ easier, such as an Input Method to help type symbols Muldis D uses, or a
 Codeless Language Module for BBEdit that does syntax coloring and function
 searching of Muldis D code.
 
-All of the initial content is in the C<archives/> and C<util/>
-subdirectories of this distribution.  Most of the forthcoming content would
-likely be either in POD files under C<lib/> or in pure Muldis D code files
-probably under C<examples/>.
+Some of the content is in the C<archives/> and C<util/> subdirectories of
+this distribution.  Some of the existing, and possibly most of the
+forthcoming, content is in POD files under C<lib/>, which are linked to in
+L</SECTIONS>.  Other forthcoming content may be under C<examples/>.
 
-I<This documentation is pending.>
+=head1 SECTIONS
+
+=over
+
+=item L<Muldis::D::Manual::TemporalExtras>
+
+Legacy temporal data types, operators, and syntax removed from Muldis D.
+
+=back
 
 =head1 SEE ALSO
 
