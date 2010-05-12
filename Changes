@@ -1,6 +1,92 @@
                              Muldis::D::Manual
 ---------------------------------------------------------------------------
 
+2010-05-11   Darren Duncan <darren@DarrenDuncan.net>
+
+    * Muldis::D::Manual version 0.3.0 is released on CPAN as
+    Muldis-D-Manual-0.3.0.tar.gz.
+
+    * (BBEdit_LM_Muldis_D.plist)  Corresponding to changes introduced in
+    Muldis D spec v0.111.0 for PTMD_STD:  Updates to the syntax coloring
+    patterns and function-search pattern concerning segmentation of long
+    stringy value literals; the patterns are simplified because now even a
+    segmented string still just has a single pair of quotes around the
+    whole literal, rather than a pair of quotes around each segment.
+
+    * (BBEdit_LM_Muldis_D.plist)  Corresponding to changes introduced in
+    Muldis D spec v0.112.0 for PTMD_STD:  Updates to the keywords list and
+    function-search pattern concerning that the "mixin-type" keyword has
+    been added.
+
+    * (BBEdit_LM_Muldis_D.plist)  Corresponding to changes introduced in
+    Muldis D spec v0.112.0 for PTMD_STD:  Updates to the keywords list
+    concerning the "date_time" SSE was renamed to "temporal".
+
+    * (Input_Method_Muldis_D.cin)  Corresponding to changes introduced in
+    Muldis D spec v0.112.0 for PTMD_STD:  Renamed several chardef keys to
+    match the renames of the set membership testing operators; the 4 keys
+    "[|n][i|h]mem" were renamed to "[|n][in|has]", respectively.
+
+    * (BBEdit_LM_Muldis_D.plist)  Corresponding to changes introduced in
+    Muldis D spec v0.113.0 for PTMD_STD:  Updates to the syntax coloring
+    patterns concerning the "RatRoundMeth" type being renamed to
+    "RoundMeth", and 2 of its values being renamed, and 2 values added.
+
+    * (BBEdit_LM_Muldis_D.plist)  Corresponding to changes introduced in
+    Muldis D spec v0.113.0 for PTMD_STD:  Updates to syntax coloring
+    patterns that correspond to some optional whitespace in value literals,
+    which is now prohibited except as an "unspace".
+
+    * (Muldis_D_PDAFP_200807_updated.xul)  Corresponding to changes
+    introduced in Muldis D spec v0.115.0:  Update several descriptions and
+    code examples to reflect the addition of the "recipe" 4th main routine
+    kind, and the reduction of what a "procedure" can directly do.  Also
+    purged the slides talking about "inner routines", which haven't existed
+    for awhile; they were marked w rewrite-TODOs, but removal is simpler.
+
+    * (Input_Method_Muldis_D.cin)  Corresponding to changes introduced in
+    Muldis D spec v0.115.0 for PTMD_STD:  Removed 4 chardefs that
+    associated the math op chars [*+-%] with the relational ops [∩∪∖∆].
+
+    * (BBEdit_LM_Muldis_D.plist)  Corresponding to changes introduced in
+    Muldis D spec v0.116.0 for PTMD_STD:  Updates to the syntax coloring
+    patterns concerning that the "Singleton" domain-union type, and its 2
+    singleton-type values "-Inf", "Inf" (and "-∞", "∞") have been added.
+
+    * (Input_Method_Muldis_D.cin)  Corresponding to changes introduced in
+    Muldis D spec v0.116.0 for PTMD_STD:  Added chardef for "∞" character.
+
+    * (Muldis_D_PDAFP_200807_updated.xul)  Corresponding to changes
+    introduced in Muldis D spec v0.117.0:  Added a note to
+    reflect no one writes "lex" anymore; that namespace now just a concept.
+
+    * (Muldis_D_PDAFP_200807_updated.xul)  Corresponding to changes
+    introduced in Muldis D spec v0.118.0 for PTMD_STD:  Update to code
+    examples to reflect that most math op spec-syn were renamed or merged.
+
+    * (Muldis_D_PDAFP_200807_updated.xul)  Corresponding to changes
+    introduced in Muldis D spec v0.120.0:  Update to code example to
+    reflect use of new mixin temporal type and virtual system-service.
+
+    * (BBEdit_LM_Muldis_D.plist)  Corresponding to changes introduced in
+    Muldis D spec v0.121.0 for PTMD_STD:  Updates to the syntax coloring
+    patterns and keywords list concerning that the temporal standard syntax
+    extension has been completely removed from the grammar, as part of the
+    purge of all non-mixin temporal types and all non-virtual temporal
+    routines from the language; removed the 'temporal' keyword and the
+    syntax coloring patterns for "TAI[Instant|Duration]",
+    "[UTC|Float][Instant|DateTime|Date|Time", "UTCDuration".
+
+    * (Muldis_D_PDAFP_200807_updated.xul)  Corresponding to changes
+    introduced in Muldis D spec v0.122.0 and v0.124.0 for PTMD_STD:  Update
+    to code example to reflect that concrete syntax for material
+    references, and for routine embedding, both such as are used for
+    higher-order functions, is now finalized.
+
+    * (BBEdit_LM_Muldis_D.plist)  Many additions to the keywords list and
+    function-search pattern, some corresponding to changes in multiple past
+    Muldis D spec versions, and some relating to plans of uspecced syntax.
+
 2010-03-01   Darren Duncan <darren@DarrenDuncan.net>
 
     * Muldis::D::Manual version 0.2.0 is released on CPAN as
