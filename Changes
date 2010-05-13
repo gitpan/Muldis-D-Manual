@@ -1,6 +1,20 @@
                              Muldis::D::Manual
 ---------------------------------------------------------------------------
 
+2010-05-12   Darren Duncan <darren@DarrenDuncan.net>
+
+    * Muldis::D::Manual version 0.5.0 is released on CPAN as
+    Muldis-D-Manual-0.5.0.tar.gz.
+
+    * Added new file "lib/Muldis/D/Manual/CD.pod" which features example
+    code that demonstrates a very basic CD database, which consists of a
+    schema definition having relvars to store data and routines to fetch or
+    update that data, and it includes some sample data.  For users that are
+    better served with a complete example than a spec, this should do it.
+
+    * (BBEdit_LM_Muldis_D.plist)  Corresponding to changes introduced in
+    Muldis D spec v0.129.0 for PTMD_STD:  Added "compose" to keywords list.
+
 2010-05-11   Darren Duncan <darren@DarrenDuncan.net>
 
     * Muldis::D::Manual version 0.4.0 is released on CPAN as
