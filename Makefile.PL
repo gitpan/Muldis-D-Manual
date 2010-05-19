@@ -12,7 +12,7 @@ sub OPTIONAL {
 
 WriteMakefile(
    NAME => 'Muldis::D::Manual',
-   VERSION => '0.6.0',
+   VERSION => '0.6.1',
    ABSTRACT => 'Muldis D language and implementations manual',
    AUTHOR => 'Darren Duncan <darren@DarrenDuncan.net>',
    PREREQ_PM => {},
@@ -30,7 +30,7 @@ WriteMakefile(
          resources => {
             homepage => 'http://www.muldis.com/',
             license => 'http://www.fsf.org/licensing/licenses/gpl.html',
-            MailingList => 'http://mm.DarrenDuncan.net/mailman/listinfo',
+            MailingList => 'http://mm.darrenduncan.net/mailman/listinfo',
             repository => 'http://github.com/muldis/Muldis-D-Manual',
          },
       },

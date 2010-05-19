@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Muldis-D-Manual
-version:            0.6.0
+version:            0.6.1
 abstract:           Muldis D language and implementations manual
 author:
     - Darren Duncan <darren@DarrenDuncan.net>
@@ -15,7 +15,7 @@ requires:
 resources:
     homepage:     http://www.muldis.com/
     license:      http://www.fsf.org/licensing/licenses/gpl.html
-    MailingList:  http://mm.DarrenDuncan.net/mailman/listinfo
+    MailingList:  http://mm.darrenduncan.net/mailman/listinfo
     repository:   http://github.com/muldis/Muldis-D-Manual
 no_index:
     directory:
