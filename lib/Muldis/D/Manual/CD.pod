@@ -9,7 +9,7 @@ Simple CD database example
 
 =head1 VERSION
 
-This document is Muldis::D::Manual::CD version 0.8.0.
+This document is Muldis::D::Manual::CD version 0.9.0.
 
 =head1 PREFACE
 
@@ -83,81 +83,75 @@ also be made complete later if the rationale exists.
 
 =head2 PTMD_STD - the_database
 
-    Muldis_D:"http://muldis.com":0.134.0:PTMD_STD:{
+    Muldis_D:"http://muldis.com":0.137.0:PTMD_STD:{
         catalog_abstraction_level => rtn_inv_alt_syn,
         op_char_repertoire => basic
     }
 
     depot-catalog {
-        self-local-dbvar-type nlx.lib.CD_DB
+        self-local-dbvar-type nlx.lib.""
 
     #######################################################################
 
-    database-type CD_DB {
-        attr artists : nlx.lib.Artists
-        attr cds     : nlx.lib.CDs
-        attr tracks  : nlx.lib.Tracks
+    database-type "" {
+        attr artists : nlx.lib.artists
+        attr cds     : nlx.lib.cds
+        attr tracks  : nlx.lib.tracks
         constraint nlx.lib.sc_artist_has_cds
         constraint nlx.lib.sc_cd_has_tracks
     }
 
     #######################################################################
 
-    tuple-type Artist {
-        attr artist_id   : Int
-        attr artist_name : Text
-    }
-
-    relation-type Artists {
-        tuple-type nlx.lib.Artist
-        constraint nlx.lib.pk_artist_id
+    relation-type artists {
+        tuple-type nlx.lib.T
+        with tuple-type T {
+            attr artist_id   : Int
+            attr artist_name : Text
+        }
+        constraint nlx.lib.pk
+        with primary-key pk { artist_id }
         constraint nlx.lib.sk_artist_name
+        with key-constraint sk_artist_name { artist_name }
     }
-
-    primary-key pk_artist_id { artist_id }
-    key-constraint sk_artist_name { artist_name }
 
     #######################################################################
 
-    tuple-type CD {
-        attr cd_id     : Int
-        attr artist_id : Int
-        attr cd_title  : Text
-    }
-
-    relation-type CDs {
-        tuple-type nlx.lib.CD
-        constraint nlx.lib.pk_cd_id
+    relation-type cds {
+        tuple-type nlx.lib.T
+        with tuple-type T {
+            attr cd_id     : Int
+            attr artist_id : Int
+            attr cd_title  : Text
+        }
+        constraint nlx.lib.pk
+        with primary-key pk { cd_id }
         constraint nlx.lib.sk_cd_title
+        with key-constraint sk_cd_title { cd_title }
     }
-
-    primary-key pk_cd_id { cd_id }
-    key-constraint sk_cd_title { cd_title }
 
     subset-constraint sc_artist_has_cds {
-        parent artists using-key nlx.lib.pk_artist_id
+        parent artists using-key nlx.lib.artists.pk
         child cds using-attrs { =>artist_id }
     }
 
     #######################################################################
 
-    tuple-type Track {
-        attr track_id    : Int
-        attr cd_id       : Int
-        attr track_title : Text
-    }
-
-    relation-type Tracks {
-        tuple-type nlx.lib.Track
-        constraint nlx.lib.pk_track_id
+    relation-type tracks {
+        tuple-type nlx.lib.T
+        with tuple-type T {
+            attr track_id    : Int
+            attr cd_id       : Int
+            attr track_title : Text
+        }
+        constraint nlx.lib.pk
+        with primary-key pk { track_id }
         constraint nlx.lib.sk_track_title
+        with key-constraint sk_track_title { track_title }
     }
-
-    primary-key pk_track_id { track_id }
-    key-constraint sk_track_title { track_title }
 
     subset-constraint sc_cd_has_tracks {
-        parent cds using-key nlx.lib.pk_cd_id
+        parent cds using-key nlx.lib.cds.pk
         child tracks using-attrs { =>cd_id }
     }
 
@@ -211,17 +205,17 @@ also be made complete later if the rationale exists.
 
     #######################################################################
 
-    } # depot-catalog #
+    } #`depot-catalog`#
 
     depot-data Database:{
         artists => @:{ artist_id, artist_name },
         cds     => @:{ cd_id, artist_id, cd_title },
         tracks  => @:{ track_id, cd_id, track_title }
-    } # depot-data #
+    } #`depot-data`#
 
 =head2 PTMD_STD - insert_db
 
-    Muldis_D:"http://muldis.com":0.134.0:PTMD_STD:{
+    Muldis_D:"http://muldis.com":0.137.0:PTMD_STD:{
         catalog_abstraction_level => rtn_inv_alt_syn,
         op_char_repertoire => basic
     }
@@ -237,19 +231,19 @@ also be made complete later if the rationale exists.
     #######################################################################
 
     procedure main () [
-        # Connect to the_database in read-write mode. #
-        # The "..." has likes of filename, server name, user, pass, etc. #
+        #`Connect to the_database in read-write mode.
+          The "..." has likes of filename, server name, user, pass, etc.`#
         create_depot_mount( name => Name:db, we_may_update => True,
             details => @:OVLScaValExprNodeSet:{ ... } )
 
-        # Add test data to the_database, as a single atomic transaction. #
-        # This might fail if records with same titles/etc already there. #
+        #`Add test data to the_database, as a single atomic transaction.
+          This might fail if records with same titles/etc already there.`#
         try
             nlx.lib.insert_records()
         catch
             nlx.lib.insert_failed()
 
-        # Disconnect the_database now that we're done with it. #
+        #`Disconnect the_database now that we're done with it.`#
         drop_depot_mount( name => Name:db )
     ]
 
@@ -260,11 +254,11 @@ also be made complete later if the rationale exists.
     #######################################################################
 
     recipe insert_records (&db ::= fed.data.db, src ::= nlx.data) {
-        # We will generate new integer record ids serially starting after #
-        # the maximum ids currently in use per relvar. #
-        # There are, of course, other ways to produce record ids. #
+        #`We will generate new integer record ids serially starting after
+          the maximum ids currently in use per relvar.
+          There are, of course, other ways to produce record ids.`#
 
-        # So start by determining the existing maximum ids. #
+        #`So start by determining the existing maximum ids.`#
         max_used_artist_id ::= is_empty(db.artists) ?? 0
             !! max( Set_from_attr( db.artists, name => Name:artist_id ) )
         max_used_cd_id ::= is_empty(db.cds) ?? 0
@@ -272,9 +266,9 @@ also be made complete later if the rationale exists.
         max_used_track_id ::= is_empty(db.tracks) ?? 0
             !! max( Set_from_attr( db.tracks, name => Name:track_id ) )
 
-        # Now generate new record ids and attach them to records to add. #
-        # The process involves sorting of the new data simply to make it #
-        # fully-deterministic, giving same result on any implementation. #
+        #`Now generate new record ids and attach them to records to add.
+          The process involves sorting of the new data simply to make it
+          fully-deterministic, giving same result on any implementation.`#
         src_artists_with_ids ::= rank_by_attr_names( src.artists,
             name => Name:artist_id,
             order_by => [ %:{ name => Name:artist_name,
@@ -294,12 +288,12 @@ also be made complete later if the rationale exists.
             first_rank => max_used_track_id ++
         )
 
-        # Now substitute parent record ids for parent names or titles. #
+        #`Now substitute parent record ids for parent names or titles.`#
         new_artists ::= src_artists_with_ids
         new_cds ::= src_cds_with_ids compose new_artists
-        new_tracks ::= src_tracks_with_ids compose new_cds@{!artist_id}
+        new_tracks ::= src_tracks_with_ids compose new_cds{!artist_id}
 
-        # Now insert the prepared new records into the_database. #
+        #`Now insert the prepared new records into the_database.`#
         db.artists :=union new_artists
         db.cds :=union new_cds
         db.tracks :=union new_tracks
@@ -307,7 +301,7 @@ also be made complete later if the rationale exists.
 
     #######################################################################
 
-    } # depot-catalog #
+    } #`depot-catalog`#
 
     depot-data Database:{
         artists => @:[ artist_name ];{
@@ -328,11 +322,11 @@ also be made complete later if the rationale exists.
             [ 'Stan'           , 'The Marshall Mathers LP' ],
             [ 'The Way I Am'   , 'The Marshall Mathers LP' ]
         }
-    } # depot-data #
+    } #`depot-data`#
 
 =head2 PTMD_STD - test_db
 
-    Muldis_D:"http://muldis.com":0.134.0:PTMD_STD:{
+    Muldis_D:"http://muldis.com":0.137.0:PTMD_STD:{
         catalog_abstraction_level => rtn_inv_alt_syn,
         op_char_repertoire => basic
     }
@@ -346,15 +340,15 @@ also be made complete later if the rationale exists.
     #######################################################################
 
     procedure main () [
-        # Connect to the_database in read-only mode. #
-        # The "..." has likes of filename, server name, user, pass, etc. #
+        #`Connect to the_database in read-only mode.
+          The "..." has likes of filename, server name, user, pass, etc.`#
         create_depot_mount( name => Name:db,
             details => @:OVLScaValExprNodeSet:{ ... } )
 
-        # Fetch test data, in a transaction for read-consistency. #
+        #`Fetch test data, in a transaction for read-consistency.`#
         nlx.lib.get_records()
 
-        # Disconnect the_database now that we're done with it. #
+        #`Disconnect the_database now that we're done with it.`#
         drop_depot_mount( name => Name:db )
     ]
 
@@ -444,92 +438,86 @@ also be made complete later if the rationale exists.
 
     #######################################################################
 
-    } # depot-catalog #
+    } #`depot-catalog`#
 
 =head1 EXAMPLE USING HDMD_Perl6_STD DIALECT
 
 =head2 HDMD_Perl6_STD - the_database
 
     [
-        [ 'Muldis_D', 'http://muldis.com', '0.134.0', 'HDMD_Perl6_STD', {
+        [ 'Muldis_D', 'http://muldis.com', '0.137.0', 'HDMD_Perl6_STD', {
             catalog_abstraction_level => 'rtn_inv_alt_syn',
             op_char_repertoire => 'basic'
         } ],
 
         [ 'depot',
             :depot-catalog[
-                :self-local-dbvar-type<nlx.lib.CD_DB>,
+                :self-local-dbvar-type<nlx.lib.>,
 
     #######################################################################
 
-    [ 'database-type', 'CD_DB', [
-        [ 'attr', 'artists', 'nlx.lib.Artists' ],
-        [ 'attr', 'cds'    , 'nlx.lib.CDs'     ],
-        [ 'attr', 'tracks' , 'nlx.lib.Tracks'  ],
+    [ 'database-type', '', [
+        [ 'attr', 'artists', 'nlx.lib.artists' ],
+        [ 'attr', 'cds'    , 'nlx.lib.cds'     ],
+        [ 'attr', 'tracks' , 'nlx.lib.tracks'  ],
         :constraint<nlx.lib.sc_artist_has_cds>,
         :constraint<nlx.lib.sc_cd_has_tracks>,
     ] ],
 
     #######################################################################
 
-    [ 'tuple-type', 'Artist', [
-        [ 'attr', 'artist_id'  , 'Int'  ],
-        [ 'attr', 'artist_name', 'Text' ],
-    ] ],
-
-    [ 'relation-type', 'Artists', [
-        :tuple-type<nlx.lib.Artist>,
-        :constraint<nlx.lib.pk_artist_id>,
+    [ 'relation-type', 'artists', [
+        :tuple-type<nlx.lib.T>,
+        :with[ 'tuple-type', 'T', [
+            [ 'attr', 'artist_id'  , 'Int'  ],
+            [ 'attr', 'artist_name', 'Text' ],
+        ] ],
+        :constraint<nlx.lib.pk>,
+        :with[ 'primary-key', 'pk', 'artist_id' ],
         :constraint<nlx.lib.sk_artist_name>,
+        :with[ 'key-constraint', 'sk_artist_name', 'artist_name' ],
     ] ],
-
-    [ 'primary-key', 'pk_artist_id', 'artist_id' ],
-    [ 'key-constraint', 'sk_artist_name', 'artist_name' ],
 
     #######################################################################
 
-    [ 'tuple-type', 'CD', [
-        [ 'attr', 'cd_id'    , 'Int'  ],
-        [ 'attr', 'artist_id', 'Int'  ],
-        [ 'attr', 'cd_title' , 'Text' ],
-    ] ],
-
-    [ 'relation-type', 'CDs', [
-        :tuple-type<nlx.lib.CD>,
-        :constraint<nlx.lib.pk_cd_id>,
+    [ 'relation-type', 'cds', [
+        :tuple-type<nlx.lib.T>,
+        :with[ 'tuple-type', 'T', [
+            [ 'attr', 'cd_id'    , 'Int'  ],
+            [ 'attr', 'artist_id', 'Int'  ],
+            [ 'attr', 'cd_title' , 'Text' ],
+        ] ],
+        :constraint<nlx.lib.pk>,
+        :with[ 'primary-key', 'pk', 'cd_id' ],
         :constraint<nlx.lib.sk_cd_title>,
+        :with[ 'key-constraint', 'sk_cd_title', 'cd_title' ],
     ] ],
-
-    [ 'primary-key', 'pk_cd_id', 'cd_id' ],
-    [ 'key-constraint', 'sk_cd_title', 'cd_title' ],
 
     [ 'subset-constraint', 'sc_artist_has_cds', {
         parent      => 'artists',
-        using-key   => 'nlx.lib.pk_artist_id',
+        using-key   => 'nlx.lib.artists.pk',
         child       => 'cds',
         using-attrs => { artist_id => 'artist_id' }
     } ],
 
     #######################################################################
 
-    [ 'tuple-type', 'Track', [
-        [ 'attr', 'track_id'   , 'Int'  ],
-        [ 'attr', 'cd_id'      , 'Int'  ],
-        [ 'attr', 'track_title', 'Text' ],
-    ] ],
-
-    [ 'relation-type', 'Tracks', [
-        :tuple-type<nlx.lib.Track>,
-        :constraint<nlx.lib.pk_track_id>,
+    [ 'relation-type', 'tracks', [
+        :tuple-type<nlx.lib.T>,
+        :with[ 'tuple-type', 'T', [
+            [ 'attr', 'track_id'   , 'Int'  ],
+            [ 'attr', 'cd_id'      , 'Int'  ],
+            [ 'attr', 'track_title', 'Text' ],
+        ] ],
+        :constraint<nlx.lib.pk>,
+        :with[ 'primary-key', 'pk', 'track_id' ],
         :constraint<nlx.lib.sk_track_title>,
+        :with[ 'key-constraint', 'sk_track_title', 'track_title' ],
     ] ],
-
-    [ 'primary-key', 'pk_track_id', 'track_id' ],
-    [ 'key-constraint', 'sk_track_title', 'track_title' ],
 
     [ 'subset-constraint', 'sc_cd_has_tracks', {
         parent      => 'cds',
-        using-key   => 'nlx.lib.pk_cd_id',
+        using-key   => 'nlx.lib.cds.pk',
         child       => 'tracks',
         using-attrs => { cd_id => 'cd_id' }
     } ],
@@ -594,7 +582,7 @@ also be made complete later if the rationale exists.
 =head2 HDMD_Perl6_STD - insert_db
 
     [
-        [ 'Muldis_D', 'http://muldis.com', '0.134.0', 'HDMD_Perl6_STD', {
+        [ 'Muldis_D', 'http://muldis.com', '0.137.0', 'HDMD_Perl6_STD', {
             catalog_abstraction_level => 'rtn_inv_alt_syn',
             op_char_repertoire => 'basic'
         } ],
@@ -665,7 +653,7 @@ also be made complete later if the rationale exists.
 =head2 HDMD_Perl6_STD - test_db
 
     [
-        [ 'Muldis_D', 'http://muldis.com', '0.134.0', 'HDMD_Perl6_STD', {
+        [ 'Muldis_D', 'http://muldis.com', '0.137.0', 'HDMD_Perl6_STD', {
             catalog_abstraction_level => 'rtn_inv_alt_syn',
             op_char_repertoire => 'basic'
         } ],
@@ -767,85 +755,79 @@ also be made complete later if the rationale exists.
 =head2 HDMD_Perl5_STD - the_database
 
     [
-        [ 'Muldis_D', 'http://muldis.com', '0.134.0', 'HDMD_Perl5_STD', {
+        [ 'Muldis_D', 'http://muldis.com', '0.137.0', 'HDMD_Perl5_STD', {
             catalog_abstraction_level => 'rtn_inv_alt_syn',
             op_char_repertoire => 'basic'
         } ],
 
         [ 'depot',
             [ 'depot-catalog' => [
-                [ 'self-local-dbvar-type', 'nlx.lib.CD_DB' ],
+                [ 'self-local-dbvar-type', 'nlx.lib.' ],
 
     #######################################################################
 
-    [ 'database-type', 'CD_DB', [
-        [ 'attr', 'artists', 'nlx.lib.Artists' ],
-        [ 'attr', 'cds'    , 'nlx.lib.CDs'     ],
-        [ 'attr', 'tracks' , 'nlx.lib.Tracks'  ],
+    [ 'database-type', '', [
+        [ 'attr', 'artists', 'nlx.lib.artists' ],
+        [ 'attr', 'cds'    , 'nlx.lib.cds'     ],
+        [ 'attr', 'tracks' , 'nlx.lib.tracks'  ],
         [ 'constraint', 'nlx.lib.sc_artist_has_cds' ],
         [ 'constraint', 'nlx.lib.sc_cd_has_tracks'  ],
     ] ],
 
     #######################################################################
 
-    [ 'tuple-type', 'Artist', [
-        [ 'attr', 'artist_id'  , 'Int'  ],
-        [ 'attr', 'artist_name', 'Text' ],
-    ] ],
-
-    [ 'relation-type', 'Artists', [
-        [ 'tuple-type', 'nlx.lib.Artist' ],
-        [ 'constraint', 'nlx.lib.pk_artist_id' ],
+    [ 'relation-type', 'artists', [
+        [ 'tuple-type', 'nlx.lib.T' ],
+        [ 'with' => [ 'tuple-type', 'T', [
+            [ 'attr', 'artist_id'  , 'Int'  ],
+            [ 'attr', 'artist_name', 'Text' ],
+        ] ] ],
+        [ 'constraint', 'nlx.lib.pk' ],
+        [ 'with' => [ 'primary-key', 'pk', 'artist_id' ] ],
         [ 'constraint', 'nlx.lib.sk_artist_name' ],
+        [ 'with' => [ 'key-constraint','sk_artist_name','artist_name' ] ],
     ] ],
-
-    [ 'primary-key', 'pk_artist_id', 'artist_id' ],
-    [ 'key-constraint', 'sk_artist_name', 'artist_name' ],
 
     #######################################################################
 
-    [ 'tuple-type', 'CD', [
-        [ 'attr', 'cd_id'    , 'Int'  ],
-        [ 'attr', 'artist_id', 'Int'  ],
-        [ 'attr', 'cd_title' , 'Text' ],
-    ] ],
-
-    [ 'relation-type', 'CDs', [
-        [ 'tuple-type', 'nlx.lib.CD' ],
-        [ 'constraint', 'nlx.lib.pk_cd_id' ],
+    [ 'relation-type', 'cds', [
+        [ 'tuple-type', 'nlx.lib.T' ],
+        [ 'with' => [ 'tuple-type', 'T', [
+            [ 'attr', 'cd_id'    , 'Int'  ],
+            [ 'attr', 'artist_id', 'Int'  ],
+            [ 'attr', 'cd_title' , 'Text' ],
+        ] ] ],
+        [ 'constraint', 'nlx.lib.pk' ],
+        [ 'with' => [ 'primary-key', 'pk', 'cd_id' ] ],
         [ 'constraint', 'nlx.lib.sk_cd_title' ],
+        [ 'with' => [ 'key-constraint', 'sk_cd_title', 'cd_title' ] ],
     ] ],
-
-    [ 'primary-key', 'pk_cd_id', 'cd_id' ],
-    [ 'key-constraint', 'sk_cd_title', 'cd_title' ],
 
     [ 'subset-constraint', 'sc_artist_has_cds', {
         parent        => 'artists',
-        'using-key'   => 'nlx.lib.pk_artist_id',
+        'using-key'   => 'nlx.lib.artists.pk',
         child         => 'cds',
         'using-attrs' => { artist_id => 'artist_id' }
     } ],
 
     #######################################################################
 
-    [ 'tuple-type', 'Track', [
-        [ 'attr', 'track_id'   , 'Int'  ],
-        [ 'attr', 'cd_id'      , 'Int'  ],
-        [ 'attr', 'track_title', 'Text' ],
-    ] ],
-
-    [ 'relation-type', 'Tracks', [
-        [ 'tuple-type', 'nlx.lib.Track' ],
-        [ 'constraint', 'nlx.lib.pk_track_id' ],
+    [ 'relation-type', 'tracks', [
+        [ 'tuple-type', 'nlx.lib.T' ],
+        [ 'with' => [ 'tuple-type', 'T', [
+            [ 'attr', 'track_id'   , 'Int'  ],
+            [ 'attr', 'cd_id'      , 'Int'  ],
+            [ 'attr', 'track_title', 'Text' ],
+        ] ] ],
+        [ 'constraint', 'nlx.lib.pk' ],
+        [ 'with' => [ 'primary-key', 'pk', 'track_id' ] ],
         [ 'constraint', 'nlx.lib.sk_track_title' ],
+        [ 'with' => [ 'key-constraint','sk_track_title','track_title' ] ],
     ] ],
-
-    [ 'primary-key', 'pk_track_id', 'track_id' ],
-    [ 'key-constraint', 'sk_track_title', 'track_title' ],
 
     [ 'subset-constraint', 'sc_cd_has_tracks', {
         parent        => 'cds',
-        'using-key'   => 'nlx.lib.pk_cd_id',
+        'using-key'   => 'nlx.lib.cds.pk',
         child         => 'tracks',
         'using-attrs' => { cd_id => 'cd_id' }
     } ],
@@ -907,7 +889,7 @@ also be made complete later if the rationale exists.
 =head2 HDMD_Perl5_STD - insert_db
 
     [
-        [ 'Muldis_D', 'http://muldis.com', '0.134.0', 'HDMD_Perl5_STD', {
+        [ 'Muldis_D', 'http://muldis.com', '0.137.0', 'HDMD_Perl5_STD', {
             catalog_abstraction_level => 'rtn_inv_alt_syn',
             op_char_repertoire => 'basic'
         } ],
@@ -979,7 +961,7 @@ also be made complete later if the rationale exists.
 =head2 HDMD_Perl5_STD - test_db
 
     [
-        [ 'Muldis_D', 'http://muldis.com', '0.134.0', 'HDMD_Perl5_STD', {
+        [ 'Muldis_D', 'http://muldis.com', '0.137.0', 'HDMD_Perl5_STD', {
             catalog_abstraction_level => 'rtn_inv_alt_syn',
             op_char_repertoire => 'basic'
         } ],
